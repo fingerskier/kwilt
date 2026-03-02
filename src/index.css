@@ -1,0 +1,34 @@
+:root {
+  --color-bg: #f5f0eb;
+  --color-surface: #ffffff;
+  --color-border: #d4c5b2;
+  --color-text: #333333;
+  --color-primary: #5b8c5a;
+  --color-primary-hover: #4a7349;
+  --sidebar-width: 210px;
+  --header-height: 56px;
+
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: var(--color-text);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+}
+
+input, select {
+  font-family: inherit;
+}
