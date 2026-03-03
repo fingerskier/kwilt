@@ -1,17 +1,23 @@
 import { useAppContext } from '../state/context';
 import { saveProjectToFile, loadProjectFromFile } from '../utils/fileIo';
+import { exportProjectToPdf } from '../utils/exportPdf';
 import styles from './Header.module.css';
 
 export default function Header() {
   const { project, setProject, tilesHistory, undo, redo, canUndo, canRedo, dispatchHistory } = useAppContext();
 
+  const fullProject = {
+    ...project,
+    block: { ...project.block, tiles: tilesHistory.present },
+    updatedAt: new Date().toISOString(),
+  };
+
   const handleSave = () => {
-    const fullProject = {
-      ...project,
-      block: { ...project.block, tiles: tilesHistory.present },
-      updatedAt: new Date().toISOString(),
-    };
     saveProjectToFile(fullProject);
+  };
+
+  const handleExportPdf = () => {
+    exportProjectToPdf(fullProject);
   };
 
   const handleLoad = async () => {
@@ -50,6 +56,9 @@ export default function Header() {
         </button>
         <button className={styles.btn} onClick={handleLoad} title="Load project file">
           Load
+        </button>
+        <button className={styles.btn} onClick={handleExportPdf} title="Export as PDF">
+          PDF
         </button>
       </div>
     </header>
