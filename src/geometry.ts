@@ -29,12 +29,22 @@ export function tileToSvgPoints(tile: Tile): string {
     }
 
     case 'parallelogram': {
-      const offset = s / 4;
-      if (tile.orientation === 0 || tile.orientation === 2) {
-        return `${x + offset},${y} ${x + s},${y} ${x + s - offset},${y + s} ${x},${y + s}`;
-      } else {
-        return `${x},${y} ${x + s - offset},${y} ${x + s},${y + s} ${x + offset},${y + s}`;
+      const half = s / 2;
+      switch (tile.orientation) {
+        case 0:
+          // horizontal, slant right. BBox: s × s/2
+          return `${x + half},${y} ${x + s},${y} ${x + half},${y + half} ${x},${y + half}`;
+        case 2:
+          // horizontal, slant left (mirror). BBox: s × s/2
+          return `${x},${y} ${x + half},${y} ${x + s},${y + half} ${x + half},${y + half}`;
+        case 1:
+          // vertical, slant one way. BBox: s/2 × s
+          return `${x},${y + half} ${x + half},${y} ${x + half},${y + half} ${x},${y + s}`;
+        case 3:
+          // vertical, mirror. BBox: s/2 × s
+          return `${x},${y} ${x + half},${y + half} ${x + half},${y + s} ${x},${y + half}`;
       }
+      break;
     }
   }
   return '';
@@ -55,6 +65,10 @@ export function tileFitsInBlock(col: number, row: number, size: number, blockSiz
         return col + Math.ceil(size / 2) <= blockSize && row + size <= blockSize;
       }
     case 'parallelogram':
-      return col + size <= blockSize && row + size <= blockSize;
+      if (orientation === 0 || orientation === 2) {
+        return col + size <= blockSize && row + Math.ceil(size / 2) <= blockSize;
+      } else {
+        return col + Math.ceil(size / 2) <= blockSize && row + size <= blockSize;
+      }
   }
 }
