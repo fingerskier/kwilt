@@ -32,17 +32,15 @@ export function tileToSvgPoints(tile: Tile): string {
       const half = s / 2;
       switch (tile.orientation) {
         case 0:
-          // horizontal, slant right. BBox: s × s/2
-          return `${x + half},${y} ${x + s},${y} ${x + half},${y + half} ${x},${y + half}`;
         case 2:
-          // horizontal, slant left (mirror). BBox: s × s/2
-          return `${x},${y} ${x + half},${y} ${x + s},${y + half} ${x + half},${y + half}`;
+          // horizontal orientation. BBox: s × s/2
+          // 180° rotation of a parallelogram is the same geometry
+          return `${x + half},${y} ${x + s},${y} ${x + half},${y + half} ${x},${y + half}`;
         case 1:
-          // vertical, slant one way. BBox: s/2 × s
-          return `${x},${y + half} ${x + half},${y} ${x + half},${y + half} ${x},${y + s}`;
         case 3:
-          // vertical, mirror. BBox: s/2 × s
-          return `${x},${y} ${x + half},${y + half} ${x + half},${y + s} ${x},${y + half}`;
+          // vertical orientation. BBox: s/2 × s
+          // 270° rotation is same geometry as 90°
+          return `${x},${y + half} ${x + half},${y} ${x + half},${y + half} ${x},${y + s}`;
       }
       break;
     }
