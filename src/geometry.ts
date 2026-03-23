@@ -29,12 +29,20 @@ export function tileToSvgPoints(tile: Tile): string {
     }
 
     case 'parallelogram': {
-      const offset = s / 4;
-      if (tile.orientation === 0 || tile.orientation === 2) {
-        return `${x + offset},${y} ${x + s},${y} ${x + s - offset},${y + s} ${x},${y + s}`;
-      } else {
-        return `${x},${y} ${x + s - offset},${y} ${x + s},${y + s} ${x + offset},${y + s}`;
+      const half = s / 2;
+      switch (tile.orientation) {
+        case 0:
+        case 2:
+          // horizontal orientation. BBox: s × s/2
+          // 180° rotation of a parallelogram is the same geometry
+          return `${x + half},${y} ${x + s},${y} ${x + half},${y + half} ${x},${y + half}`;
+        case 1:
+        case 3:
+          // vertical orientation. BBox: s/2 × s
+          // 270° rotation is same geometry as 90°
+          return `${x},${y + half} ${x + half},${y} ${x + half},${y + half} ${x},${y + s}`;
       }
+      break;
     }
   }
   return '';
@@ -55,6 +63,10 @@ export function tileFitsInBlock(col: number, row: number, size: number, blockSiz
         return col + Math.ceil(size / 2) <= blockSize && row + size <= blockSize;
       }
     case 'parallelogram':
-      return col + size <= blockSize && row + size <= blockSize;
+      if (orientation === 0 || orientation === 2) {
+        return col + size <= blockSize && row + Math.ceil(size / 2) <= blockSize;
+      } else {
+        return col + Math.ceil(size / 2) <= blockSize && row + size <= blockSize;
+      }
   }
 }
